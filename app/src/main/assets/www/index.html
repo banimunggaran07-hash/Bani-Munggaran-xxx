@@ -60,6 +60,7 @@
       <button id="btnSearch" class="ib" type="button" aria-label="Cari harga pasar"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></button>
     </div>
     <nav class="pill" id="pill">
+      <button id="tabHome" type="button" data-tab="home">Ringkasan</button>
       <button type="button" data-tab="calc" class="on">Taksasi</button>
       <button type="button" data-tab="ang">Angsuran</button>
       <button type="button" data-tab="fu">Follow up</button>
@@ -70,6 +71,14 @@
 
   <main class="pn" id="pn">
     <div id="nasbar" class="nasbar" hidden><span id="nasTxt"></span><button id="nasClear" type="button" aria-label="Hapus nasabah">&times;</button></div>
+
+    <!-- ===== RINGKASAN OVERVIEW ===== -->
+    <section id="v-home" class="view">
+      <div class="sthead"><div><h2 class="st">Ringkasan</h2><p class="sub" id="home-sub">Ringkasan aktivitas operasional Anda.</p></div><button id="btnHomeRefresh" class="rb" type="button" aria-label="Segarkan ringkasan"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 8v5h-5M4 16v-5h5M6 9a7 7 0 0 1 12-1M18 15a7 7 0 0 1-12 1"/></svg></button></div>
+      <div class="home-hero"><span class="k">Status aplikasi</span><b id="home-status">Online</b><p id="home-status-sub">Siap digunakan untuk taksasi dan follow up.</p><div class="home-progress"><i id="home-progress-bar"></i></div></div>
+      <div class="home-kpis"><div><span>Taksasi tersimpan</span><b id="home-taksasi">0</b><small>Di perangkat ini</small></div><div><span>Follow up aktif</span><b id="home-followup">0</b><small id="home-followup-sub">Belum ada bahan</small></div><div><span>Berhasil</span><b id="home-success">0</b><small id="home-success-sub">Dari follow up tim</small></div><div><span>Kesehatan data</span><b id="home-health">Baik</b><small id="home-health-sub">Harga pasar siap</small></div></div>
+      <div class="card home-actions"><div class="cardhead"><h3 class="ct">Aksi cepat</h3></div><button class="it" data-go="calc" type="button"><span class="tl coral-bg">▦</span><span class="tt"><b>Mulai taksasi</b><small>Hitung estimasi plafond motor</small></span><i class="chev"></i></button><button class="it" data-go="fu" type="button"><span class="tl blue-bg">◉</span><span class="tt"><b>Buka Follow up</b><small>Lihat dan perbarui status nasabah</small></span><i class="chev"></i></button><button class="it" data-go="sup" id="home-go-sup" type="button" hidden><span class="tl green-bg">◈</span><span class="tt"><b>Kinerja Tim</b><small>Pantau progres Sales Force</small></span><i class="chev"></i></button></div>
+    </section>
 
     <!-- ===== TAKSASI ===== -->
     <section id="v-calc" class="view active">
@@ -333,6 +342,7 @@
       </div>
       <p class="sec">AKUN &amp; SINKRONISASI</p>
       <div class="card list">
+        <button class="it" type="button" data-go="team" id="btnTeamSettings"><span class="tl" style="background:#6B3FE0"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="10" r="2"/><path d="M3 20c.5-3 2.5-5 6-5s5.5 2 6 5M15 16c2.5-.5 4.5.8 5 3"/></svg></span><span class="tt"><b>Pengaturan tim</b><small>Anggota Sales Force dan akses</small></span><i class="chev"></i></button>
         <button class="it" type="button" data-go="sync"><span class="tl" style="background:#3D63D8"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20 8v5h-5M4 16v-5h5M6 9a7 7 0 0 1 12-1M18 15a7 7 0 0 1-12 1"/></svg></span><span class="tt"><b>Sinkronisasi</b><small id="st-sync"></small></span><i class="chev"></i></button>
         <button class="it" type="button" id="btnLogout"><span class="tl" style="background:#B45F06"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M10 4H5v16h5M15 8l4 4-4 4M19 12H9"/></svg></span><span class="tt"><b>Keluar</b><small id="st-user"></small></span><i class="chev"></i></button>
       </div>
@@ -341,6 +351,13 @@
         <button class="it" type="button" id="btnHow"><span class="tl" style="background:#3D63D8"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 1-1 1.7M12 17h.01"/></svg></span><span class="tt"><b>Cara kerja</b><small>Langkah menghitung taksasi</small></span><i class="chev"></i></button>
         <div class="it"><span class="tl" style="background:#6B3FE0"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7h.01"/></svg></span><span class="tt"><b>Tentang aplikasi</b><small id="st-about"></small></span></div>
       </div>
+    </section>
+
+    <!-- ===== PENGATURAN TIM ===== -->
+    <section id="v-team" class="view">
+      <div class="sthead"><div><h2 class="st">Pengaturan Tim</h2><p class="sub" id="team-sub">Anggota dan akses tim Anda.</p></div><button id="btnTeamRefresh" class="rb" type="button" aria-label="Segarkan tim"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 8v5h-5M4 16v-5h5M6 9a7 7 0 0 1 12-1M18 15a7 7 0 0 1-12 1"/></svg></button></div>
+      <div class="card team-profile"><span class="av" id="team-avatar">?</span><div><b id="team-owner">-</b><small id="team-owner-role">-</small></div></div>
+      <div class="card"><div class="cardhead"><h3 class="ct">Anggota Sales Force</h3><span class="chip" id="team-count">0</span></div><div id="team-list"></div><p id="team-msg" class="hint c"></p></div>
     </section>
 
     <!-- ===== SINKRONISASI ===== -->

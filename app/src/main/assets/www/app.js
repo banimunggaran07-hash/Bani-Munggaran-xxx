@@ -57,8 +57,8 @@
   }
 
   /* ---------- navigasi ---------- */
-  var TABS = ['calc', 'ang', 'fu', 'sup', 'info'];
-  var TITLES = { search: 'Cari harga pasar', topup: 'Top up kontrak lama', fudetail: 'Detail follow up', settings: 'Pengaturan', sync: 'Sinkronisasi', sup: 'Kinerja Tim' };
+  var TABS = ['home', 'calc', 'ang', 'fu', 'sup', 'info'];
+  var TITLES = { home: 'Ringkasan', search: 'Cari harga pasar', topup: 'Top up kontrak lama', fudetail: 'Detail follow up', settings: 'Pengaturan', team: 'Pengaturan Tim', sync: 'Sinkronisasi', sup: 'Kinerja Tim' };
   var cur = 'calc', lastTab = 'calc';
   function backTarget(v) { return { search: 'calc', topup: 'calc', fudetail: 'fu', settings: lastTab, sync: 'settings' }[v] || 'calc'; }
   function go(v) {
@@ -74,11 +74,13 @@
     $('#pn').scrollTop = 0;
     updateNasbar();
     if (v === 'search') renderSearch(true);
+    if (v === 'home') renderHome();
     if (v === 'ang') renderAng();
     if (v === 'fu') renderFu(true);
     if (v === 'sup') renderSupervisor();
     if (v === 'topup') calc();
     if (v === 'settings') renderSettings();
+    if (v === 'team') renderTeam();
     if (v === 'sync') renderSync();
   }
   // dipanggil MainActivity saat tombol Back: true = sudah ditangani
@@ -413,6 +415,28 @@
     }, function (e) { msg.textContent = e.message || 'Gagal memuat ringkasan tim.'; msg.className = 'hint c warn'; });
   }
 
+  function renderTeam() {
+    var u = SY.user(), msg = $('#team-msg');
+    if (!u) return;
+    set('team-avatar', String(u.name || '?').charAt(0).toUpperCase()); set('team-owner', u.name || '-'); set('team-owner-role', (u.role === 'supervisor' ? 'Supervisor' : u.role === 'admin' ? 'Admin' : 'Sales Force') + ' · ' + (u.team || 'Tim Anda'));
+    if (u.role === 'marketing') { set('team-count', '1'); $('#team-list').innerHTML = '<div class="team-member"><span class="av blue-av">' + esc(String(u.name || '?').charAt(0)) + '</span><span><b>' + esc(u.name || '-') + '</b><small>Sales Force · akun Anda</small></span></div>'; msg.textContent = 'Hubungi Supervisor untuk perubahan akses tim.'; return; }
+    msg.textContent = 'Memuat anggota tim...';
+    FU.summary().then(function (s) { var members = s.marketing || []; set('team-count', dots(members.length)); $('#team-list').innerHTML = members.length ? members.map(function (m) { return '<div class="team-member"><span class="av blue-av">' + esc(String(m.name || '?').charAt(0)) + '</span><span><b>' + esc(m.name || '-') + '</b><small>Sales Force · ' + dots(m.total || 0) + ' follow up</small></span><span class="team-online">Aktif</span></div>'; }).join('') : '<p class="hint c">Belum ada akun Sales Force di tim Anda.</p>'; msg.textContent = 'Role ditentukan oleh server. Hubungi admin untuk menambah akun baru.'; }, function (e) { msg.textContent = e.message || 'Gagal memuat anggota tim.'; msg.className = 'hint c warn'; });
+  }
+
+  function renderHome() {
+    var u = SY.user(), st = SY.state(), c = FU.counts();
+    set('home-sub', u ? 'Halo ' + (u.name || '') + ' · ' + (u.team || 'Tim Anda') : 'Ringkasan aktivitas operasional Anda.');
+    set('home-status', st.online && st.enabled ? 'Online' : 'Offline');
+    set('home-status-sub', st.online && st.enabled ? 'Data akan tersinkron otomatis saat ada internet.' : 'Pekerjaan tetap tersimpan di perangkat.');
+    set('home-taksasi', dots(SY.list().filter(function (e) { return e.type === 'taksasi'; }).length));
+    set('home-followup', dots(c.total || 0)); set('home-followup-sub', c.total ? dots(c.baru || 0) + ' belum dihubungi' : 'Belum ada bahan');
+    set('home-success', dots(c.berhasil || 0)); set('home-success-sub', c.total ? 'Dari bahan follow up Anda' : 'Belum ada data');
+    set('home-health', window.HARGA && window.HARGA.length ? 'Baik' : 'Perlu cek'); set('home-health-sub', window.HARGA && window.HARGA.length ? dots(window.HARGA.length) + ' harga pasar tersedia' : 'Data harga belum siap');
+    var bar = $('#home-progress-bar'); if (bar) bar.style.width = st.online && st.enabled ? '100%' : '55%';
+    var sup = $('#home-go-sup'); if (sup) sup.hidden = !(u && (u.role === 'supervisor' || u.role === 'admin'));
+  }
+
   /* ---------- follow up -> harga pasar -> simulasi ---------- */
   function nz(s) { return String(s == null ? '' : s).replace(/\s+/g, ' ').trim().toUpperCase(); }
   function col(r, keys) {
@@ -709,13 +733,15 @@
     e.className = 'hdr-role ' + (u ? 'role-' + u.role : '');
     var tab = $('#tabSup');
     if (tab) tab.hidden = !(u && (u.role === 'supervisor' || u.role === 'admin'));
+    var team = $('#btnTeamSettings');
+    if (team) team.hidden = !(u && (u.role === 'supervisor' || u.role === 'admin'));
   }
   function showApp() {
     document.body.classList.remove('auth-on');
     $('#auth').hidden = true;
     wasIn = !!SY.user();
     renderRoleBadge();
-    go('calc');
+    go('home');
     FU.init().then(function () { FU.pull(); });
   }
   function doLogin() {
@@ -798,6 +824,8 @@
     $('#btnFuRefresh').addEventListener('click', loadProg);
     $('#btnSupRefresh').addEventListener('click', renderSupervisor);
     $('#btnSupRefresh2').addEventListener('click', renderSupervisor);
+    $('#btnHomeRefresh').addEventListener('click', renderHome);
+    $('#btnTeamRefresh').addEventListener('click', renderTeam);
 
     // pengaturan & sinkronisasi
     $$('[data-go]').forEach(function (b) { b.addEventListener('click', function () { go(b.dataset.go); }); });
@@ -810,6 +838,7 @@
     SY.on(function () {
       renderRoleBadge();
       if (cur === 'sync') renderSync();
+      if (cur === 'home') renderHome();
       if (cur === 'settings') renderSettings();
       if (wasIn && SY.enabled() && !SY.user() && $('#auth').hidden) { wasIn = false; showAuth('login', 'Sesi berakhir. Silakan masuk lagi.'); }
     });
