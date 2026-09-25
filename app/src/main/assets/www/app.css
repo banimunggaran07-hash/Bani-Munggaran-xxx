@@ -296,3 +296,4 @@ input:focus,textarea:focus{border-color:var(--coral);box-shadow:0 0 0 3px rgba(2
 @media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
 @supports (padding: max(0px)){.hd{padding-top:max(10px, env(safe-area-inset-top))}.pn{padding-bottom:max(120px, calc(120px + env(safe-area-inset-bottom)))}}
 /* ================================================================ */
+ .hdr-role{display:inline-flex;align-items:center;border-radius:999px;padding:5px 9px;margin-left:6px;font-size:10px;font-weight:800;white-space:nowrap}.hdr-role.role-marketing{color:#2453A6;background:#E7EFFF}.hdr-role.role-supervisor{color:#8A5B07;background:#FFF0C9}.hdr-role.role-admin{color:#7D2DA7;background:#F3E5FF}@media(max-width:420px){.hdr-role{font-size:9px;padding:4px 7px}}

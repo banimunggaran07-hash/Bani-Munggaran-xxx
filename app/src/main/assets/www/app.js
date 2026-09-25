@@ -679,10 +679,19 @@
     $('#v-login').hidden = which !== 'login';
     if (which === 'login') { set('l-msg', msg || ''); $('#l-msg').className = 'hint' + (msg ? ' warn' : ''); }
   }
+  function renderRoleBadge() {
+    var u = SY.user(), e = $('#hdrRole');
+    if (!e) return;
+    var labels = { marketing: 'Sales Force', supervisor: 'Supervisor', admin: 'Admin' };
+    e.textContent = u ? (labels[u.role] || u.role || '') : '';
+    e.hidden = !u;
+    e.className = 'hdr-role ' + (u ? 'role-' + u.role : '');
+  }
   function showApp() {
     document.body.classList.remove('auth-on');
     $('#auth').hidden = true;
     wasIn = !!SY.user();
+    renderRoleBadge();
     go('calc');
     FU.init().then(function () { FU.pull(); });
   }
@@ -774,6 +783,7 @@
     });
     $('#swAuto').addEventListener('click', function () { SY.setAuto(!SY.state().auto); });
     SY.on(function () {
+      renderRoleBadge();
       if (cur === 'sync') renderSync();
       if (cur === 'settings') renderSettings();
       if (wasIn && SY.enabled() && !SY.user() && $('#auth').hidden) { wasIn = false; showAuth('login', 'Sesi berakhir. Silakan masuk lagi.'); }
