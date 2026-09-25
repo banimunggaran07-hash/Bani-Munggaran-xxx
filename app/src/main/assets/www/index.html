@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1E1F4E">
+<title>Calculator OTR</title>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<!-- ============ MASUK: selamat datang & login ============ -->
+<section id="auth" hidden>
+  <div id="v-welcome" class="authv">
+    <div class="wtop">
+      <svg width="280" height="252" viewBox="0 0 300 270" aria-hidden="true">
+        <circle cx="150" cy="135" r="112" fill="#DCDFF5"/><ellipse cx="150" cy="248" rx="90" ry="8" fill="#C9CBEB"/>
+        <g transform="rotate(-6 150 140)"><rect x="100" y="60" width="100" height="150" rx="18" fill="#1E1F4E"/><rect x="112" y="74" width="76" height="34" rx="8" fill="#ECEEF9"/>
+        <text x="182" y="98" text-anchor="end" font-size="16" font-weight="800" fill="#1E1F4E">9.750</text>
+        <g fill="#3A3B7A"><circle cx="124" cy="130" r="9"/><circle cx="150" cy="130" r="9"/><circle cx="176" cy="130" r="9"/><circle cx="124" cy="156" r="9"/><circle cx="150" cy="156" r="9"/><circle cx="176" cy="156" r="9"/><circle cx="124" cy="182" r="9"/><circle cx="150" cy="182" r="9"/></g><circle cx="176" cy="182" r="9" fill="#D8394A"/></g>
+        <g transform="rotate(8 232 72)"><rect x="197" y="52" width="70" height="40" rx="12" fill="#D8394A"/><text x="232" y="79" text-anchor="middle" font-size="16" font-weight="800" fill="#fff">88%</text></g>
+        <circle cx="62" cy="76" r="22" fill="#F5A623"/><text x="62" y="82" text-anchor="middle" font-size="15" font-weight="800" fill="#1E1F4E">Rp</text>
+        <circle cx="52" cy="196" r="11" fill="#F5A623"/><circle cx="252" cy="204" r="10" fill="#3D63D8"/>
+      </svg>
+    </div>
+    <div class="wtx">
+      <h1>Hitung taksasi motor,<br>lebih cepat</h1>
+      <p>Taksasi, estimasi angsuran, dan follow up nasabah dalam satu aplikasi yang tetap jalan tanpa internet.</p>
+      <button id="btnStart" class="cta coral" type="button">Mulai</button>
+    </div>
+  </div>
+
+  <div id="v-login" class="authv" hidden>
+    <div class="ltop">
+      <div class="logo"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 12h.01M12 12h.01M16 12h.01M8 16h.01M12 16h.01M16 16h.01"/></svg></div>
+      <h1>Calculator OTR</h1>
+      <p>Masuk untuk menyinkronkan data tim</p>
+    </div>
+    <div class="lpn">
+      <h2 class="st">Masuk</h2>
+      <div class="card">
+        <div class="field"><label for="l-email">Email kerja</label><input id="l-email" type="email" inputmode="email" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="nama@perusahaan.co.id"></div>
+        <div class="field"><label for="l-pw">Kata sandi</label><input id="l-pw" type="password" autocomplete="current-password"></div>
+        <p id="l-msg" class="hint" role="alert"></p>
+        <button id="btnLogin" class="cta coral" type="button">Masuk</button>
+      </div>
+      <p class="hint c">Gunakan email kerja yang didaftarkan oleh admin. Peran (marketing atau supervisor) mengikuti akun Anda.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ APLIKASI ============ -->
+<div id="app" data-m="tabs">
+  <header class="hd">
+    <div class="bar">
+      <button id="btnGear" class="ib" type="button" aria-label="Pengaturan"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/></svg></button>
+      <button id="btnBack" class="ib" type="button" aria-label="Kembali"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <h1 id="hdTitle">Calculator OTR</h1>
+      <button id="btnSearch" class="ib" type="button" aria-label="Cari harga pasar"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></button>
+    </div>
+    <nav class="pill" id="pill">
+      <button type="button" data-tab="calc" class="on">Taksasi</button>
+      <button type="button" data-tab="ang">Angsuran</button>
+      <button type="button" data-tab="fu">Follow up</button>
+      <button type="button" data-tab="info">Data</button>
+    </nav>
+  </header>
+
+  <main class="pn" id="pn">
+    <div id="nasbar" class="nasbar" hidden><span id="nasTxt"></span><button id="nasClear" type="button" aria-label="Hapus nasabah">&times;</button></div>
+
+    <!-- ===== TAKSASI ===== -->
+    <section id="v-calc" class="view active">
+      <div class="sthead">
+        <div><h2 class="st">Taksasi</h2><p class="sub" id="c-kios"></p></div>
+        <button id="btnReset" class="rb" type="button" aria-label="Kosongkan isian"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 1 0 3-6.2M4 4v4h4"/></svg></button>
+      </div>
+
+      <div class="hero">
+        <div class="hrow"><span class="k">Maksimal pinjaman</span><span class="tag" id="o-tipeAng">-</span></div>
+        <div class="big" id="o-maks">-</div>
+        <div class="hr">
+          <div><span>OTR (Rp)</span><b id="o-otr">-</b></div>
+          <div><span>Potongan (Rp)</span><b id="o-total">-</b></div>
+          <div><span>Plafond</span><b id="o-plafond" class="badge">-</b></div>
+        </div>
+        <p id="o-hint" class="hint"></p>
+      </div>
+
+      <div class="card">
+        <div class="field"><label>Jenis motor</label>
+          <div class="seg" data-key="jenis"><button type="button" data-v="Honda">Honda</button><button type="button" data-v="Non Honda">Non Honda</button></div></div>
+        <div class="field"><label>Tipe customer</label>
+          <div class="seg chips" data-key="tipe"><button type="button" data-v="New Customer">New Customer</button><button type="button" data-v="Good Loyal">Good Loyal</button><button type="button" data-v="Good">Good</button><button type="button" data-v="Medium">Medium</button></div></div>
+        <div class="grid2">
+          <div class="field"><label>Atas nama sendiri</label>
+            <div class="seg" data-key="sendiri"><button type="button" data-v="Ya">Ya</button><button type="button" data-v="Tidak">Tidak</button></div></div>
+          <div class="field"><label>Faktur</label>
+            <div class="seg" data-key="faktur"><button type="button" data-v="Ada">Ada</button><button type="button" data-v="Tidak Ada">Tidak ada</button></div></div>
+        </div>
+        <div class="grid3">
+          <div class="field"><label for="f-tahun">Tahun</label><input id="f-tahun" data-key="tahun" type="text" inputmode="numeric" maxlength="4" placeholder="2025"></div>
+          <div class="field"><label for="f-tglPajak">Tgl pajak</label><input id="f-tglPajak" data-key="tglPajak" type="date"></div>
+          <div class="field"><label for="f-tglKaleng">Tgl kaleng</label><input id="f-tglKaleng" data-key="tglKaleng" type="date"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <label class="lb" for="f-otr">OTR</label>
+        <div class="row">
+          <input id="f-otr" data-key="otr" data-money="1" type="text" inputmode="numeric" placeholder="Rp. 0" class="strong">
+          <button id="btnCariOtr" class="btn navy" type="button">Cari</button>
+        </div>
+        <small id="o-motor" class="hint"></small>
+      </div>
+
+      <button id="btnAngsuran" class="cta coral" type="button">Lihat estimasi angsuran</button>
+
+      <button id="btnGoTopup" class="card rowlink" type="button">
+        <span><b>Ada kontrak lama? Hitung top up</b><small>Total diterima setelah sisa angsuran &amp; denda</small></span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5F6288" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>
+      </button>
+
+      <details class="card det">
+        <summary>Rincian potongan &amp; status</summary>
+        <div class="grid2 tiles">
+          <div class="tile"><span>Tipe angsuran</span><b id="o-tipeAng2">-</b></div>
+          <div class="tile"><span>Max tenor</span><b id="o-maxTenor">-</b></div>
+        </div>
+        <div class="grid3 tiles">
+          <div class="tile"><span>Pajak</span><b id="o-pajak">-</b></div>
+          <div class="tile"><span>Kaleng</span><b id="o-kaleng">-</b></div>
+          <div class="tile"><span>Faktur</span><b id="o-faktur">-</b></div>
+        </div>
+        <h3>Potongan</h3>
+        <div class="grid3 tiles">
+          <div class="tile"><span>Pajak</span><b id="o-potPajak">-</b></div>
+          <div class="tile"><span>Kaleng</span><b id="o-potKaleng">-</b></div>
+          <div class="tile"><span>Faktur</span><b id="o-potFaktur">-</b></div>
+        </div>
+        <p class="formula">(OTR Motor - Total Potongan) * Plafond</p>
+        <p class="calc" id="o-hasil">-</p>
+      </details>
+    </section>
+
+    <!-- ===== CARI OTR ===== -->
+    <section id="v-search" class="view">
+      <div class="card">
+        <label class="lb" for="f-qOtr">Kata kunci</label>
+        <input id="f-qOtr" data-key="qOtr" type="search" autocomplete="off" placeholder="Contoh: HONDA BEAT 2018" class="focus">
+        <small class="hint">Semua kata harus cocok, maksimal 6 kata.</small>
+      </div>
+      <p id="s-ctx" class="hint ctx"></p>
+      <div class="cnt"><span>Hasil ditemukan</span><b id="s-count">0</b></div>
+      <p id="s-status" class="hint"></p>
+      <div id="s-results"></div>
+      <button id="s-more" class="btn light full" type="button" hidden>Lihat lainnya</button>
+      <small id="s-dataInfo" class="hint c link"></small>
+    </section>
+
+    <!-- ===== ANGSURAN ===== -->
+    <section id="v-ang" class="view">
+      <h2 class="st">Estimasi angsuran</h2>
+      <div class="card">
+        <div class="seg" id="angType"><button type="button" data-v="Reguler">Reguler</button><button type="button" data-v="Awda">Awda</button></div>
+        <p id="a-follow" class="hint"></p>
+        <div class="seg" id="angMode"><button type="button" data-v="angsuran">Angsuran</button><button type="button" data-v="war">WAR Gross</button><button type="button" data-v="split">Splitting rate</button></div>
+        <div class="lines">
+          <div><span>WAR Nett - Eff</span><b id="a-war">-</b></div>
+          <div><span>Admin murni</span><b id="a-admin">-</b></div>
+        </div>
+        <div class="field"><label for="f-angDana">Dana cair</label>
+          <input id="f-angDana" data-key="angDana" data-money="1" type="text" inputmode="numeric" placeholder="Rp 0" class="strong">
+          <small id="a-danaHint" class="hint"></small></div>
+      </div>
+      <div class="card tight" id="a-custom"></div>
+      <button id="btnAngImg" class="cta coral" type="button">Kirim simulasi ke WhatsApp nasabah</button>
+      <details class="card det">
+        <summary>Tabel semua dana cair</summary>
+        <div class="tablewrap"><table id="a-table"></table></div>
+      </details>
+    </section>
+
+    <!-- ===== FOLLOW UP ===== -->
+    <section id="v-fu" class="view">
+      <div id="fu-off" class="card" hidden>
+        <h3 class="ct">Butuh server</h3>
+        <p class="hint">Bahan follow up dikirim supervisor lewat server. Isi <b>apiBase</b> di <b>config.js</b>, lalu masuk dengan akun Anda.</p>
+      </div>
+
+      <!-- tampilan marketing -->
+      <div id="fu-mkt" hidden>
+        <div class="sthead">
+          <div><h2 class="st">Follow up</h2><p class="sub" id="fu-sub"></p></div>
+          <button id="btnFuSync" class="rb" type="button" aria-label="Segarkan bahan"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 8v5h-5M4 16v-5h5M6 9a7 7 0 0 1 12-1M18 15a7 7 0 0 1-12 1"/></svg></button>
+        </div>
+        <div class="hero">
+          <span class="k">Belum dihubungi</span>
+          <div class="big" id="fu-big">0</div>
+          <div class="hr">
+            <div><span>Dihubungi</span><b id="fu-c-dihubungi">0</b></div>
+            <div><span>Janji</span><b id="fu-c-janji">0</b></div>
+            <div><span>Berhasil</span><b id="fu-c-berhasil">0</b></div>
+          </div>
+        </div>
+        <div class="card">
+          <input id="f-fuQ" data-key="fuQ" type="search" autocomplete="off" placeholder="Cari nama, kontrak, atau unit">
+          <div class="seg chips" data-key="fuFilter">
+            <button type="button" data-v="semua">Semua</button><button type="button" data-v="baru">Baru</button><button type="button" data-v="dihubungi">Dihubungi</button><button type="button" data-v="janji">Janji</button><button type="button" data-v="berhasil">Berhasil</button><button type="button" data-v="tidak">Tidak berminat</button>
+          </div>
+        </div>
+        <div id="fu-list"></div>
+        <button id="fu-more" class="btn light full" type="button" hidden>Lihat lainnya</button>
+        <div id="fu-empty" class="card" hidden><p class="hint c" id="fu-emptyTxt"></p></div>
+      </div>
+
+      <!-- tampilan supervisor / admin -->
+      <div id="fu-sup" hidden>
+        <h2 class="st">Bahan follow up</h2>
+        <p class="sub sp">Unggah Excel, sistem membagi ke marketing sesuai kolom Marketing.</p>
+        <div class="card">
+          <h3 class="ct">Unggah bahan</h3>
+          <p class="hint">Baris pertama berisi judul kolom. Format <b>BAHAN FOLLOW UP</b> dikenali langsung: <b>CS ID</b> atau <b>MARKETING</b> (cocok dengan ID/nama akun), <b>NAMA KONSUMEN</b>, <b>NO KONTRAK</b>, <b>NO HP</b>, <b>TAHUN</b>, <b>OBJ_TYPE</b>, <b>OBJ_DESC</b>, <b>TIPE CORI</b>. Kolom lain tetap ditampilkan. Baris untuk marketing yang belum punya akun tidak disimpan.</p>
+          <input id="f-fu" type="file" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden>
+          <button id="btnFuPick" class="btn navy full" type="button">Pilih file Excel</button>
+          <div id="fu-prev" hidden>
+            <div class="lines" id="fu-prevInfo"></div>
+            <div class="cols" id="fu-cols"></div>
+            <div class="field"><label for="f-fuName">Nama bahan</label><input id="f-fuName" type="text" maxlength="80"></div>
+            <label class="check"><input id="fu-replace" type="checkbox" checked><span>Arsipkan bahan saya sebelumnya</span></label>
+            <button id="btnFuUpload" class="cta coral" type="button">Unggah &amp; bagikan ke marketing</button>
+          </div>
+          <p id="fu-msg" class="hint"></p>
+          <div id="fu-result"></div>
+        </div>
+        <div class="card">
+          <div class="cardhead"><h3 class="ct">Progres tim</h3><button id="btnFuRefresh" class="lnk" type="button">Segarkan</button></div>
+          <div id="fu-prog"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== DETAIL FOLLOW UP ===== -->
+    <section id="v-fudetail" class="view">
+      <div class="card">
+        <div class="prof"><span class="av" id="fd-av">?</span><div><b id="fd-name">-</b><small id="fd-sub"></small></div><span class="chip" id="fd-chip"></span></div>
+        <div class="acts"><a id="fd-tel" class="btn navy" href="#">Telepon</a><a id="fd-wa" class="btn wa" href="#">WhatsApp</a></div>
+        <button id="btnFdSim" class="cta coral" type="button">Cari harga pasar &amp; simulasikan</button>
+        <button id="btnFdTopup" class="btn light full" type="button">Hitung top up kontrak ini</button>
+      </div>
+      <div class="card">
+        <h3 class="ct">Status follow up</h3>
+        <div class="seg chips" id="fd-status">
+          <button type="button" data-v="baru">Baru</button><button type="button" data-v="dihubungi">Dihubungi</button><button type="button" data-v="janji">Janji</button><button type="button" data-v="berhasil">Berhasil</button><button type="button" data-v="tidak">Tidak berminat</button>
+        </div>
+        <div class="field"><label for="fd-note">Catatan</label><textarea id="fd-note" maxlength="300" rows="3" placeholder="Hasil telepon, janji, alasan..."></textarea></div>
+        <button id="btnFdSave" class="cta coral" type="button">Simpan</button>
+        <p id="fd-when" class="hint"></p>
+      </div>
+      <div class="card"><h3 class="ct">Data nasabah</h3><div class="lines" id="fd-cols"></div></div>
+    </section>
+
+    <!-- ===== TOP UP KONTRAK LAMA ===== -->
+    <section id="v-topup" class="view">
+      <p class="sub sp">Hitung total dana yang diterima bila kontrak lama dilunasi lewat top up.</p>
+      <div class="card">
+        <div class="field"><label for="f-nasabah">Nama nasabah</label><input id="f-nasabah" data-key="nasabah" type="text" autocomplete="off" autocapitalize="words" placeholder="Nama nasabah"><small id="k-info"></small></div>
+        <div class="grid2">
+          <div class="field"><label for="f-sisaAngsuran">Sisa angsuran</label><input id="f-sisaAngsuran" data-key="sisaAngsuran" data-money="1" type="text" inputmode="numeric" placeholder="Rp 0"></div>
+          <div class="field"><label for="f-denda">Denda</label><input id="f-denda" data-key="denda" data-money="1" type="text" inputmode="numeric" placeholder="Rp 0"></div>
+          <div class="field"><label for="f-dendaBayar">Denda terbayar</label><input id="f-dendaBayar" data-key="dendaBayar" data-money="1" type="text" inputmode="numeric" placeholder="Rp 0"></div>
+          <div class="field"><label for="f-collFee">Coll fee</label><input id="f-collFee" data-key="collFee" data-money="1" type="text" inputmode="numeric" placeholder="Rp 0"></div>
+          <div class="field"><label for="f-collFeeBayar">Coll fee terbayar</label><input id="f-collFeeBayar" data-key="collFeeBayar" data-money="1" type="text" inputmode="numeric" placeholder="Rp 0"></div>
+        </div>
+        <div class="lines">
+          <div><span>Total denda</span><b id="k-totalDenda">-</b></div>
+          <div><span>Sisa angsuran + denda</span><b id="k-angDenda">-</b></div>
+          <div><span>Maksimal pinjaman (dari Taksasi)</span><b id="k-maks">-</b></div>
+          <div><span>Sisa angsuran</span><b id="k-sisa">-</b></div>
+        </div>
+        <div class="out"><span>Total diterima<small>dikurangi biaya Rp 5.000</small></span><strong id="k-diterima">-</strong></div>
+      </div>
+    </section>
+
+    <!-- ===== DATA & INFO ===== -->
+    <section id="v-info" class="view">
+      <h2 class="st">Data &amp; info</h2>
+      <p class="sub sp" id="i-sub"></p>
+      <div class="card">
+        <h3 class="ct">Update data</h3>
+        <p class="hint">Unggah file Excel terbaru (sheet <b>HARGA PASAR</b>). Data langsung dipakai tanpa build ulang, dan tersimpan di perangkat ini.</p>
+        <div class="lines" id="d-status"></div>
+        <input id="f-xlsx" type="file" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden>
+        <button id="btnUpload" class="cta coral" type="button">Pilih file Excel</button>
+        <p id="d-msg" class="hint"></p>
+        <button id="btnRestore" class="btn light full" type="button">Kembalikan ke data bawaan</button>
+      </div>
+      <div class="card"><h3 class="ct">Data cabang</h3><div class="lines" id="i-cabang"></div></div>
+      <div class="card"><h3 class="ct">Potongan taksasi</h3><div class="lines" id="i-potongan"></div></div>
+      <div class="card flush"><h3 class="ct pad">Tipe angsuran &amp; plafond</h3><div class="tablewrap"><table id="i-plafond"></table></div></div>
+      <div class="card" id="i-how">
+        <h3 class="ct">Cara kerja</h3>
+        <ol class="steps">
+          <li>Isi data <b>Taksasi</b>: jenis motor, tipe customer, atas nama sendiri, faktur, tanggal pajak &amp; kaleng.</li>
+          <li>Tekan <b>Cari</b>, ketik kata kunci (mis. <i>HONDA BEAT 2018</i>), lalu pilih harga pasar sebagai OTR.</li>
+          <li><b>Tipe Angsuran</b> dan <b>Plafond</b> ditentukan dari tipe customer, jenis motor, dan status atas nama.</li>
+          <li><b>Potongan</b>: pajak mati (per tahun), kaleng mati, dan tanpa faktur.</li>
+          <li><b>Maksimal Pinjaman</b> = (OTR &minus; Total Potongan) &times; Plafond, dibulatkan ke bawah kelipatan Rp 250.000.</li>
+          <li>Top up: <b>Total diterima</b> = Maksimal Pinjaman &minus; (Sisa Angsuran + Denda) &minus; Rp 5.000.</li>
+        </ol>
+        <p class="hint" id="i-ver"></p>
+      </div>
+    </section>
+
+    <!-- ===== PENGATURAN ===== -->
+    <section id="v-settings" class="view">
+      <p class="sec">DATA</p>
+      <div class="card list">
+        <button class="it" type="button" data-go="info"><span class="tl" style="background:#D8394A"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M7 9l5-5 5 5M5 20h14"/></svg></span><span class="tt"><b>Update data</b><small>Unggah Excel harga pasar</small></span><i class="chev"></i></button>
+        <button class="it" type="button" data-go="info"><span class="tl" style="background:#6B3FE0"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10l1-5h14l1 5M5 10v10h14V10M9 20v-6h6v6"/></svg></span><span class="tt"><b>Data cabang</b><small id="st-cabang"></small></span><i class="chev"></i></button>
+        <button class="it" type="button" data-go="info"><span class="tl" style="background:#3D63D8"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 18L18 6"/><circle cx="7.5" cy="7.5" r="2"/><circle cx="16.5" cy="16.5" r="2"/></svg></span><span class="tt"><b>Potongan &amp; plafond</b><small id="st-ver"></small></span><i class="chev"></i></button>
+      </div>
+      <p class="sec">AKUN &amp; SINKRONISASI</p>
+      <div class="card list">
+        <button class="it" type="button" data-go="sync"><span class="tl" style="background:#3D63D8"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20 8v5h-5M4 16v-5h5M6 9a7 7 0 0 1 12-1M18 15a7 7 0 0 1-12 1"/></svg></span><span class="tt"><b>Sinkronisasi</b><small id="st-sync"></small></span><i class="chev"></i></button>
+        <button class="it" type="button" id="btnLogout"><span class="tl" style="background:#B45F06"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M10 4H5v16h5M15 8l4 4-4 4M19 12H9"/></svg></span><span class="tt"><b>Keluar</b><small id="st-user"></small></span><i class="chev"></i></button>
+      </div>
+      <p class="sec">BANTUAN</p>
+      <div class="card list">
+        <button class="it" type="button" id="btnHow"><span class="tl" style="background:#3D63D8"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 1-1 1.7M12 17h.01"/></svg></span><span class="tt"><b>Cara kerja</b><small>Langkah menghitung taksasi</small></span><i class="chev"></i></button>
+        <div class="it"><span class="tl" style="background:#6B3FE0"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7h.01"/></svg></span><span class="tt"><b>Tentang aplikasi</b><small id="st-about"></small></span></div>
+      </div>
+    </section>
+
+    <!-- ===== SINKRONISASI ===== -->
+    <section id="v-sync" class="view">
+      <div class="hero">
+        <div class="hrow"><span class="k">Status data</span><span class="tag" id="y-tag">-</span></div>
+        <div class="big sm" id="y-big">-</div>
+        <div class="k" id="y-last">-</div>
+        <p id="y-err" class="hint"></p>
+        <button id="btnSyncNow" class="cta coral" type="button">Sinkron sekarang</button>
+      </div>
+      <div class="card list"><h3 class="ct pad">Antrean kirim</h3><div id="y-list"></div></div>
+      <div class="card list">
+        <div class="it"><span class="tt"><b>Sinkron otomatis</b><small>Kirim saat ada internet</small></span><button id="swAuto" class="sw" type="button" role="switch" aria-checked="true" aria-label="Sinkron otomatis"><i></i></button></div>
+      </div>
+      <p class="hint c">Aplikasi tetap bisa dipakai tanpa internet. Dari HP ini hanya hasil hitungan serta status dan catatan follow up yang dikirim.</p>
+    </section>
+
+  </main>
+
+  <div id="sheet" class="sheet" hidden>
+    <div class="sheetbox" role="dialog" aria-label="Gambar simulasi">
+      <div class="cardhead"><h3 class="ct">Gambar simulasi</h3><button id="btnSheetClose" class="lnk" type="button">Tutup</button></div>
+      <img id="simImg" alt="Pratinjau gambar simulasi">
+      <div class="field"><label for="f-hpNasabah">No WhatsApp nasabah</label><input id="f-hpNasabah" data-key="hpNasabah" type="tel" inputmode="tel" placeholder="08xxxxxxxxxx"></div>
+      <button id="btnSendWa" class="cta coral" type="button">Kirim ke WhatsApp nasabah</button>
+      <div class="acts"><button id="btnShareImg" class="btn light" type="button">Bagikan ke aplikasi lain</button><button id="btnCopyTxt" class="btn light" type="button">Salin teks</button></div>
+      <p id="sheetMsg" class="hint"></p>
+    </div>
+  </div>
+  <button id="fab" class="fab" type="button" aria-label="Kirim simulasi ke nasabah" hidden><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8.2 10.8l7.6-3.6M8.2 13.2l7.6 3.6"/></svg></button>
+  <div id="toast" role="status" aria-live="polite"></div>
+</div>
+
+<script src="config.js"></script>
+<script src="data-config.js"></script>
+<script src="calc.js"></script>
+<script src="sync.js"></script>
+<script src="followup.js"></script>
+<script src="xlsx-import.js"></script>
+<script src="data-harga.js" defer></script>
+<script src="app.js" defer></script>
+</body>
+</html>

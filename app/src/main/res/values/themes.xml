@@ -1,0 +1,8 @@
+<resources>
+    <style name="Theme.CalculatorOTR" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:statusBarColor">@color/navy</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:navigationBarColor">@color/black</item>
+        <item name="android:windowBackground">@color/navy</item>
+    </style>
+</resources>

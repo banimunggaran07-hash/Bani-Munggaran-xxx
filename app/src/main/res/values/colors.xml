@@ -1,0 +1,7 @@
+<resources>
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="ic_background">#000000</color>
+    <color name="navy">#1E1F4E</color>
+    <color name="panel">#ECEEF9</color>
+</resources>

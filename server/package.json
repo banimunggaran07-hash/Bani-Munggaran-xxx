@@ -1,0 +1,9 @@
+{
+  "name": "calculator-otr-server",
+  "version": "1.2.1",
+  "private": true,
+  "description": "Server referensi Calculator OTR: login, sinkronisasi hasil kerja, bahan follow up",
+  "main": "server.js",
+  "scripts": { "start": "node server.js" },
+  "engines": { "node": ">=18" }
+}
