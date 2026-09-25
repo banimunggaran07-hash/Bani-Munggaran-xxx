@@ -57,8 +57,8 @@
   }
 
   /* ---------- navigasi ---------- */
-  var TABS = ['calc', 'ang', 'fu', 'info'];
-  var TITLES = { search: 'Cari harga pasar', topup: 'Top up kontrak lama', fudetail: 'Detail follow up', settings: 'Pengaturan', sync: 'Sinkronisasi' };
+  var TABS = ['calc', 'ang', 'fu', 'sup', 'info'];
+  var TITLES = { search: 'Cari harga pasar', topup: 'Top up kontrak lama', fudetail: 'Detail follow up', settings: 'Pengaturan', sync: 'Sinkronisasi', sup: 'Kinerja Tim' };
   var cur = 'calc', lastTab = 'calc';
   function backTarget(v) { return { search: 'calc', topup: 'calc', fudetail: 'fu', settings: lastTab, sync: 'settings' }[v] || 'calc'; }
   function go(v) {
@@ -76,6 +76,7 @@
     if (v === 'search') renderSearch(true);
     if (v === 'ang') renderAng();
     if (v === 'fu') renderFu(true);
+    if (v === 'sup') renderSupervisor();
     if (v === 'topup') calc();
     if (v === 'settings') renderSettings();
     if (v === 'sync') renderSync();
@@ -392,6 +393,26 @@
   var supLoaded = false;
   function renderSup() { if (!supLoaded) { supLoaded = true; loadProg(); } }
 
+  function renderSupervisor() {
+    var u = SY.user();
+    if (!u || (u.role !== 'supervisor' && u.role !== 'admin')) { go('fu'); toast('Halaman ini khusus Supervisor atau Admin.'); return; }
+    var msg = $('#sup-msg'); msg.textContent = 'Memuat ringkasan tim...'; msg.className = 'hint c';
+    FU.summary().then(function (s) {
+      var team = (s.marketing || []).slice().sort(function (a, b) { return (b.berhasil || 0) - (a.berhasil || 0) || (b.total || 0) - (a.total || 0); });
+      var total = 0, baru = 0, dihubungi = 0, janji = 0, berhasil = 0;
+      team.forEach(function (m) { total += Number(m.total || 0); baru += Number(m.baru || 0); dihubungi += Number(m.dihubungi || 0); janji += Number(m.janji || 0); berhasil += Number(m.berhasil || 0); });
+      set('sup-active', dots(team.length)); set('sup-total', dots(total)); set('sup-pending', dots(baru) + ' belum dihubungi');
+      set('sup-contacted', dots(dihubungi + janji + berhasil)); set('sup-rate', total ? Math.round(berhasil / total * 100) + '%' : '0%'); set('sup-success', dots(berhasil) + ' nasabah berhasil');
+      $('#sup-ranking').innerHTML = team.length ? team.map(function (m, i) {
+        var done = Number(m.dihubungi || 0) + Number(m.janji || 0) + Number(m.berhasil || 0), p = m.total ? Math.round(done / m.total * 100) : 0;
+        return '<div class="sup-person"><span class="sup-rank">' + (i + 1) + '</span><span class="sup-avatar">' + esc(String(m.name || '?').charAt(0).toUpperCase()) + '</span><span class="sup-name"><b>' + esc(m.name || 'Tanpa nama') + '</b><small>' + dots(m.total || 0) + ' follow up</small></span><span class="sup-progress"><i style="width:' + p + '%"></i><small>' + p + '% ditindaklanjuti</small></span><b class="sup-done">' + dots(m.berhasil || 0) + '</b></div>';
+      }).join('') : '<p class="hint c">Belum ada akun Sales Force di tim Anda.</p>';
+      var rows = [['Baru', baru, 'baru'], ['Dihubungi', dihubungi, 'dihubungi'], ['Janji', janji, 'janji'], ['Berhasil', berhasil, 'berhasil']];
+      $('#sup-status').innerHTML = rows.map(function (r) { var p = total ? Math.max(4, Math.round(r[1] / total * 100)) : 4; return '<div class="sup-status"><div><span>' + r[0] + '</span><b>' + dots(r[1]) + '</b></div><div class="sup-track"><i class="' + r[2] + '" style="width:' + p + '%"></i></div></div>'; }).join('');
+      msg.textContent = 'Diperbarui ' + pad2(new Date().getHours()) + ':' + pad2(new Date().getMinutes()); msg.className = 'hint c ok';
+    }, function (e) { msg.textContent = e.message || 'Gagal memuat ringkasan tim.'; msg.className = 'hint c warn'; });
+  }
+
   /* ---------- follow up -> harga pasar -> simulasi ---------- */
   function nz(s) { return String(s == null ? '' : s).replace(/\s+/g, ' ').trim().toUpperCase(); }
   function col(r, keys) {
@@ -686,6 +707,8 @@
     e.textContent = u ? (labels[u.role] || u.role || '') : '';
     e.hidden = !u;
     e.className = 'hdr-role ' + (u ? 'role-' + u.role : '');
+    var tab = $('#tabSup');
+    if (tab) tab.hidden = !(u && (u.role === 'supervisor' || u.role === 'admin'));
   }
   function showApp() {
     document.body.classList.remove('auth-on');
@@ -773,6 +796,8 @@
     $('#f-fu').addEventListener('change', function (e) { pickFuFile(e.target.files[0]); });
     $('#btnFuUpload').addEventListener('click', uploadFu);
     $('#btnFuRefresh').addEventListener('click', loadProg);
+    $('#btnSupRefresh').addEventListener('click', renderSupervisor);
+    $('#btnSupRefresh2').addEventListener('click', renderSupervisor);
 
     // pengaturan & sinkronisasi
     $$('[data-go]').forEach(function (b) { b.addEventListener('click', function () { go(b.dataset.go); }); });

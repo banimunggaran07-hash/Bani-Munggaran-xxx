@@ -63,6 +63,7 @@
       <button type="button" data-tab="calc" class="on">Taksasi</button>
       <button type="button" data-tab="ang">Angsuran</button>
       <button type="button" data-tab="fu">Follow up</button>
+      <button id="tabSup" type="button" data-tab="sup" hidden>Kinerja Tim</button>
       <button type="button" data-tab="info">Data</button>
     </nav>
   </header>
@@ -239,6 +240,15 @@
           <div id="fu-prog"></div>
         </div>
       </div>
+    </section>
+
+    <!-- ===== KINERJA TIM SUPERVISOR ===== -->
+    <section id="v-sup" class="view">
+      <div class="sthead"><div><h2 class="st">Kinerja Tim</h2><p class="sub">Ringkasan performa Sales Force di tim Anda.</p></div><button id="btnSupRefresh" class="rb" type="button" aria-label="Segarkan kinerja"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 8v5h-5M4 16v-5h5M6 9a7 7 0 0 1 12-1M18 15a7 7 0 0 1-12 1"/></svg></button></div>
+      <div class="sup-kpis"><div><span>Sales Force aktif</span><b id="sup-active">0</b><small>Dalam tim Anda</small></div><div><span>Total follow up</span><b id="sup-total">0</b><small id="sup-pending">0 belum dihubungi</small></div><div><span>Ditindaklanjuti</span><b id="sup-contacted">0</b><small>Dihubungi + janji + berhasil</small></div><div><span>Tingkat berhasil</span><b id="sup-rate">0%</b><small id="sup-success">0 nasabah berhasil</small></div></div>
+      <div class="card sup-card"><div class="cardhead"><h3 class="ct">Peringkat Sales Force</h3><span class="chip ok">Live</span></div><p class="hint">Diurutkan berdasarkan jumlah follow up berhasil.</p><div id="sup-ranking"></div></div>
+      <div class="card sup-card"><div class="cardhead"><h3 class="ct">Distribusi status</h3><button id="btnSupRefresh2" class="lnk" type="button">Segarkan</button></div><div id="sup-status"></div></div>
+      <p id="sup-msg" class="hint c"></p>
     </section>
 
     <!-- ===== DETAIL FOLLOW UP ===== -->

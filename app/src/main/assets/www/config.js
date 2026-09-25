@@ -4,4 +4,4 @@
  * apiBase diisi   -> login email wajib, hasil kerja dikirim ke server saat ada internet.
  * Harus https:// (Android memblokir http biasa). Contoh: 'https://otr.perusahaan.co.id'
  */
-window.APP = { apiBase: 'https://3000-im7uvu8ns1esmp6wl81ah-e266aadb.sg2.manus.computer', versi: '1.4.0' };
+window.APP = { apiBase: 'https://calcotrweb-9b9dshof.manus.space', versi: '1.5.0' };
