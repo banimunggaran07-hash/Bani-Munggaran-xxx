@@ -735,7 +735,15 @@
     if (tab) tab.hidden = !(u && (u.role === 'supervisor' || u.role === 'admin'));
     var team = $('#btnTeamSettings');
     if (team) team.hidden = !(u && (u.role === 'supervisor' || u.role === 'admin'));
+    var sideTeam = $('#sideTeam');
+    if (sideTeam) sideTeam.hidden = !(u && (u.role === 'supervisor' || u.role === 'admin'));
+    var sideName = $('#side-name'), sideRole = $('#side-role'), sideAvatar = $('#side-avatar');
+    if (sideName) sideName.textContent = u ? (u.name || 'Pengguna') : 'Belum masuk';
+    if (sideRole) sideRole.textContent = u ? (labels[u.role] || u.role || '') + (u.team ? ' · ' + u.team : '') : 'Mode offline';
+    if (sideAvatar) sideAvatar.textContent = u ? String(u.name || '?').charAt(0).toUpperCase() : '?';
   }
+  function closeSidebar() { var s = $('#sidebar'), shade = $('#sidebarShade'), b = $('#btnMenu'); if (s) s.hidden = true; if (shade) shade.hidden = true; if (b) b.setAttribute('aria-expanded', 'false'); }
+  function openSidebar() { var s = $('#sidebar'), shade = $('#sidebarShade'), b = $('#btnMenu'); if (s) s.hidden = false; if (shade) shade.hidden = false; if (b) b.setAttribute('aria-expanded', 'true'); renderRoleBadge(); }
   function showApp() {
     document.body.classList.remove('auth-on');
     $('#auth').hidden = true;
@@ -772,6 +780,11 @@
     $('#s-dataInfo').addEventListener('click', function () { go('info'); });
 
     $$('#pill button').forEach(function (b) { b.addEventListener('click', function () { go(b.dataset.tab); }); });
+    $('#btnMenu').addEventListener('click', openSidebar);
+    $('#btnSideClose').addEventListener('click', closeSidebar);
+    $('#sidebarShade').addEventListener('click', closeSidebar);
+    $$('[data-side-go]').forEach(function (b) { b.addEventListener('click', function () { closeSidebar(); go(b.dataset.sideGo); }); });
+    $$('[data-side-module]').forEach(function (b) { b.addEventListener('click', function () { closeSidebar(); toast(b.dataset.sideModule === 'berkas' ? 'Modul Kirim Berkas segera hadir.' : 'Modul Ruang Komite segera hadir.'); }); });
     $('#btnGear').addEventListener('click', function () { go('settings'); });
     $('#btnBack').addEventListener('click', function () { go(backTarget(cur)); });
     function openSearch() { set('s-ctx', ''); go('search'); setTimeout(function () { $('#f-qOtr').focus(); }, 60); }

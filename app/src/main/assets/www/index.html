@@ -53,6 +53,7 @@
 <div id="app" data-m="tabs">
   <header class="hd">
     <div class="bar">
+      <button id="btnMenu" class="ib menu-trigger" type="button" aria-label="Buka menu" aria-expanded="false"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
       <button id="btnGear" class="ib" type="button" aria-label="Pengaturan"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/></svg></button>
       <button id="btnBack" class="ib" type="button" aria-label="Kembali"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
       <h1 id="hdTitle">Calculator OTR</h1>
@@ -68,6 +69,28 @@
       <button type="button" data-tab="info">Data</button>
     </nav>
   </header>
+  <div id="sidebarShade" class="sidebar-shade" hidden></div>
+  <aside id="sidebar" class="sidebar" hidden aria-label="Menu utama">
+    <div class="side-head"><div class="side-brand"><span class="side-logo">CO</span><span><b>Calculator OTR</b><small>Smart Taksasi v3</small></span></div><button id="btnSideClose" class="ib" type="button" aria-label="Tutup menu">&times;</button></div>
+    <div class="side-profile"><span class="side-avatar" id="side-avatar">?</span><span><b id="side-name">Belum masuk</b><small id="side-role">Mode offline</small></span></div>
+    <p class="side-label">MODUL UTAMA</p>
+    <nav class="side-nav">
+      <button type="button" class="side-item" data-side-go="home"><span class="side-icon navy-bg">⌂</span><span><b>Ringkasan</b><small>Overview aktivitas</small></span></button>
+      <button type="button" class="side-item" data-side-go="calc"><span class="side-icon coral-bg">▦</span><span><b>Kalkulator</b><small>Taksasi &amp; simulasi</small></span></button>
+      <button type="button" class="side-item" data-side-go="ang"><span class="side-icon blue-bg">▤</span><span><b>Pricelist</b><small>Angsuran multi-tenor</small></span></button>
+      <button type="button" class="side-item" data-side-go="fu"><span class="side-icon amber-bg">◉</span><span><b>Pantau BQ</b><small>Follow up &amp; status nasabah</small></span></button>
+      <button type="button" class="side-item" data-side-go="fu"><span class="side-icon green-bg">▣</span><span><b>Bahan RO</b><small>Prospek &amp; leads</small></span></button>
+      <button type="button" class="side-item" data-side-module="berkas"><span class="side-icon purple-bg">□</span><span><b>Kirim Berkas</b><small>Dokumen &amp; PDF nasabah</small></span><em>Segera</em></button>
+      <button type="button" class="side-item" data-side-module="komite"><span class="side-icon slate-bg">☷</span><span><b>Ruang Komite</b><small>Approval &amp; negosiasi</small></span><em>Segera</em></button>
+    </nav>
+    <p class="side-label">DATA &amp; AKSES</p>
+    <nav class="side-nav">
+      <button type="button" class="side-item" data-side-go="info"><span class="side-icon blue-bg">◈</span><span><b>Data Harga Pasar</b><small>Update data Excel</small></span></button>
+      <button id="sideTeam" type="button" class="side-item" data-side-go="team" hidden><span class="side-icon purple-bg">♙</span><span><b>Pengaturan Tim</b><small>Anggota &amp; akses role</small></span></button>
+      <button type="button" class="side-item" data-side-go="settings"><span class="side-icon slate-bg">⚙</span><span><b>Pengaturan</b><small>Sinkronisasi &amp; akun</small></span></button>
+    </nav>
+    <div class="side-foot"><span class="side-dot"></span><span id="side-sync">Siap digunakan</span></div>
+  </aside>
 
   <main class="pn" id="pn">
     <div id="nasbar" class="nasbar" hidden><span id="nasTxt"></span><button id="nasClear" type="button" aria-label="Hapus nasabah">&times;</button></div>
